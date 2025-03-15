@@ -1,0 +1,1 @@
+g++ ./convex_hull_1.cpp -fopenmp -o main
