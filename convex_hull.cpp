@@ -81,9 +81,10 @@ std::vector<Point> input_points(const char* filename)
     return points;
 }
 
-int main()
+int main(int argc, char* argv[])
 {
-    auto points = input_points("1000000_1.txt");
+    omp_set_num_threads(atoi(argv[1]));
+    auto points = input_points(argv[2]);
     std::vector<Point> result;
     double time_start = omp_get_wtime(), time_end;
 
@@ -98,9 +99,15 @@ int main()
 
     auto hull = convexHull(result);
     time_end = omp_get_wtime();
-    std::cout << "Input size: " << points.size()
-        << "\nNumber of threads: " << omp_get_num_threads()
+    std::string file_name = "./output/output-" + std::string(argv[1]) + "-" + std::string(argv[2]);
+    std::ofstream out(file_name);
+    out << "Input size: " << points.size()
+        << "\nNumber of threads: " << argv[1]
         << "\nTime: " << time_end - time_start
         << "\nHull size: " << hull.size() << "\n";
+    for (auto& p : hull)
+    {
+        out << p.x << " " << p.y << "\n";
+    }
     return 0;
 }
